@@ -7,14 +7,14 @@ from .models import Ingredient, Recipe, RecipeIngredient, Tag
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
     list_display = (
-            'id',
-            'author',
-            'name',
-            'image',
-            'text',
-            'get_tags',
-            'cooking_time'
-        )
+        'id',
+        'author',
+        'name',
+        'image',
+        'text',
+        'get_tags',
+        'cooking_time'
+    )
     search_fields = ('name',)
     list_filter = ('name', 'author', 'tags')
     empty_value_display = settings.EMPTY_FIELD
