@@ -1,28 +1,26 @@
 import io
 
+from django.conf import settings
 from django.http import FileResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet as DjoserUserViewSet
+from recipes.models import Ingredient, Recipe, RecipeIngredient, Tag, User
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.units import inch
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
-from rest_framework import viewsets, filters
-from rest_framework.decorators import action
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from rest_framework.pagination import LimitOffsetPagination
-from django.conf import settings
-
 from reportlab.pdfgen import canvas
-from reportlab.lib.units import inch
-from reportlab.lib.pagesizes import letter
 from reportlab.rl_config import TTFSearchPath
+from rest_framework import filters, viewsets
+from rest_framework.decorators import action
+from rest_framework.pagination import LimitOffsetPagination
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.response import Response
 
-from recipes.models import Recipe, RecipeIngredient, Tag, Ingredient, User
-
-from .filters import RecipeFilter, IngredientFilter
+from .filters import IngredientFilter, RecipeFilter
 from .pagination import CustomPagination
-from .serializers import (RecipeSerializer, TagSerializer,
-                          IngredientSerializer, UserDetailsSerializer,
+from .serializers import (IngredientSerializer, RecipeSerializer,
+                          TagSerializer, UserDetailsSerializer,
                           UserSubscriptionsSerializer)
 
 TTFSearchPath.append(
