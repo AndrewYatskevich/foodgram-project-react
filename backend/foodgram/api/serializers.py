@@ -1,14 +1,12 @@
 import base64
 
 from django.core.files.base import ContentFile
-from djoser.serializers import \
-    UserCreateSerializer as DjoserUserCreateSerializer
+from djoser.serializers import UserCreateSerializer as DjoserCreateSerializer
+from recipes.models import Ingredient, Recipe, RecipeIngredient, Tag, User
 from rest_framework import serializers
 
-from recipes.models import Ingredient, Recipe, RecipeIngredient, Tag, User
 
-
-class UserCreateSerializer(DjoserUserCreateSerializer):
+class UserCreateSerializer(DjoserCreateSerializer):
     class Meta:
         model = User
         fields = ('email', 'username', 'first_name', 'last_name', 'password')
@@ -52,9 +50,8 @@ class RecipeIngredientSerializer(serializers.ModelSerializer):
 
     def get_amount(self, obj):
         recipe = self.context.get('recipe')
-        amount = RecipeIngredient.objects.get(recipe=recipe,
-                                              ingredient=obj).amount
-        return amount
+        return RecipeIngredient.objects.get(recipe=recipe,
+                                            ingredient=obj).amount
 
 
 class RecipeIngredientCreateSerializer(serializers.ModelSerializer):
@@ -67,9 +64,8 @@ class RecipeIngredientCreateSerializer(serializers.ModelSerializer):
 
     def get_amount(self, obj):
         recipe = self.context.get('recipe')
-        amount = RecipeIngredient.objects.get(recipe=recipe,
-                                              ingredient=obj).amount
-        return amount
+        return RecipeIngredient.objects.get(recipe=recipe,
+                                            ingredient=obj).amount
 
 
 class Image(serializers.ImageField):
