@@ -23,7 +23,7 @@ jobs:
     - name: Test with flake8 and django tests
       run: |
         python -m flake8
-        pytest
+        python backend/foodgram/manage.py test
 
   build_and_push_to_docker_hub:
     name: Push Docker image to Docker Hub
@@ -42,10 +42,10 @@ jobs:
       - name: Push to Docker Hub
         uses: docker/build-push-action@v2
         with:
-          context: ./backend/foodgram
+          context: ./backend
           file: foodgram/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/foodgram:v1.0
+          tags: andrewlyatskevich/foodgram:v1.0
 
   deploy:
     runs-on: ubuntu-latest
