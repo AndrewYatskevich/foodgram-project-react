@@ -4,6 +4,7 @@ from django.conf import settings
 from django.http import FileResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet as DjoserUserViewSet
+from recipes.models import Ingredient, Recipe, RecipeIngredient, Tag, User
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.units import inch
 from reportlab.pdfbase import pdfmetrics
@@ -15,7 +16,6 @@ from rest_framework.decorators import action
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
-from recipes.models import Ingredient, Recipe, RecipeIngredient, Tag, User
 
 from .filters import IngredientFilter, RecipeFilter
 from .pagination import CustomPagination
