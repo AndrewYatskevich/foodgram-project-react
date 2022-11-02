@@ -19,7 +19,7 @@ from reportlab.rl_config import TTFSearchPath
 
 from recipes.models import Recipe, RecipeIngredient, Tag, Ingredient, User
 
-from .filters import RecipeFilter
+from .filters import RecipeFilter, IngredientFilter
 from .pagination import CustomPagination
 from .serializers import (RecipeSerializer, TagSerializer,
                           IngredientSerializer, UserDetailsSerializer,
@@ -192,5 +192,7 @@ class TagViewSet(viewsets.ReadOnlyModelViewSet):
 class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
-    filter_backends = (filters.SearchFilter,)
-    search_fields = ('name',)
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = IngredientFilter
+    # filter_backends = (filters.SearchFilter,)
+    # search_fields = ('^name',)
