@@ -23,9 +23,6 @@ from .serializers import (IngredientSerializer, RecipeSerializer,
                           TagSerializer, UserDetailsSerializer,
                           UserSubscriptionsSerializer)
 
-TTFSearchPath.append(
-    str(settings.BASE_DIR) + '/lib/reportlabs/fonts')
-
 
 class UserViewSet(DjoserUserViewSet):
     pagination_class = LimitOffsetPagination
@@ -110,6 +107,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     @action(methods=['get'], detail=False, url_path='download_shopping_cart')
     def download_shopping_cart(self, request):
+        TTFSearchPath.append(
+            str(settings.BASE_DIR) + '/lib/reportlabs/fonts')
         shopping_cart = {}
         recipes = request.user.shopping_cart.all()
         data = RecipeIngredient.objects.filter(recipe__in=recipes)
