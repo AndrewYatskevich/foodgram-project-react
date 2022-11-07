@@ -1,16 +1,13 @@
 import io
 
 from django.conf import settings
-
-
+from recipes.models import RecipeIngredient
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.units import inch
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas
 from reportlab.rl_config import TTFSearchPath
-
-from recipes.models import RecipeIngredient
 
 TTFSearchPath.append(
     str(settings.BASE_DIR) + '/data/reportlabs/fonts')
