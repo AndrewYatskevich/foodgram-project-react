@@ -49,8 +49,15 @@ docker-compose exec web python manage.py createsuperuser
 docker-compose exec web python manage.py collectstatic --no-input
 ```
 
-![foodgram_workflow](https://github.com/AndrewYatskevich/foodgram/actions/workflows/foodgram_workflow.yml/badge.svg)
+![foodgram_workflow](https://github.com/AndrewYatskevich/foodgram-project-react/actions/workflows/foodgram_workflow.yml/badge.svg)
 
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 Автор: Андрей Яцкевич https://github.com/AndrewYatskevich
+
+Адрес сервера: http://ay-foodgram.ddns.net/
+IP сервера: http://84.201.158.190/
+
+Админ:
+- email: reviewer@testmail.com
+- password: YP_foodgram_14
