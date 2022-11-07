@@ -1,5 +1,12 @@
 import pytest
-import json
+
+from django.urls import reverse
+from rest_framework import status
+
+RECIPE_URLS = {
+    'list': 'api:recipes-list',
+    'detail': 'api:recipes-detail',
+}
 
 
 class TestRecipeView:
@@ -7,28 +14,17 @@ class TestRecipeView:
     @pytest.mark.django_db(transaction=True)
     def test_recipe_view_get(self, client, recipe, tag):
         try:
-            response = client.get(
-                '/api/recipes/')
+            response = client.get(reverse(RECIPE_URLS.get('list')))
         except Exception as e:
             assert False, f'''Страница `/api/recipes/` работает неправильно. Ошибка: `{e}`'''
-        assert response.status_code == 200, (
+        assert response.status_code == status.HTTP_200_OK, (
             'Неверный статус код запроса `/api/recipes/`')
         try:
-            response = client.get(f'/api/recipes/{recipe.id}/')
+            response = client.get(reverse(RECIPE_URLS.get('detail'), kwargs={'pk': recipe.id}))
         except Exception as e:
             assert False, f'''Страница `/api/recipes/<recipe_id>/` работает неправильно. Ошибка: `{e}`'''
-        assert response.status_code == 200, (
+        assert response.status_code == status.HTTP_200_OK, (
             'Неверный статус код запроса `/api/recipes/<recipe_id>/`')
-
-    @pytest.mark.django_db(transaction=True)
-    def test_recipe_view_get_favorited(self, user_client_1, user_1_favorite,
-                                       recipe):
-        try:
-            response = user_client_1.get('/api/recipes/')
-        except Exception as e:
-            assert False, f'''Страница `/api/recipes/` работает неправильно. Ошибка: `{e}`'''
-        assert response.status_code == 200, (
-            'Неверный статус код запроса `/api/recipes/`')
 
     @pytest.mark.django_db(transaction=True)
     def test_recipe_view_create(self, mock_media, user_client_1, tag,
@@ -50,10 +46,14 @@ class TestRecipeView:
         }
 
         try:
-            response = user_client_1.post('/api/recipes/', data=TEST_RECIPE_DATA, format="json")
+            response = user_client_1.post(
+                reverse(RECIPE_URLS.get('list')),
+                data=TEST_RECIPE_DATA,
+                format="json"
+            )
         except Exception as e:
             assert False, f'''Страница `/api/recipes/` работает неправильно. Ошибка: `{e}`'''
-        assert response.status_code == 201, (
+        assert response.status_code == status.HTTP_201_CREATED, (
             f'Неверный статус код запроса `/api/recipes/` {response.data}')
 
     @pytest.mark.django_db(transaction=True)
@@ -76,26 +76,22 @@ class TestRecipeView:
         }
 
         try:
-            response = user_client_1.patch(f'/api/recipes/{recipe.id}/',
-                                           data=TEST_RECIPE_DATA, format="json")
+            response = user_client_1.patch(
+                reverse(RECIPE_URLS.get('detail'), kwargs={'pk': recipe.id}),
+                data=TEST_RECIPE_DATA,
+                format="json"
+            )
         except Exception as e:
             assert False, f'''Страница `/api/recipes/` работает неправильно. Ошибка: `{e}`'''
-        assert response.status_code == 200, (
+        assert response.status_code == status.HTTP_200_OK, (
             f'Неверный статус код запроса `/api/recipes/` {response.data}')
 
     @pytest.mark.django_db(transaction=True)
     def test_recipe_view_delete(self, client, user_client_1, recipe):
         try:
-            response = user_client_1.delete(f'/api/recipes/{recipe.id}/')
+            response = user_client_1.delete(reverse(RECIPE_URLS.get('detail'), kwargs={'pk': recipe.id}))
         except Exception as e:
             assert False, f'''Страница `/api/recipes/{recipe.id}/` работает неправильно. Ошибка: `{e}`'''
-        assert response.status_code == 204, (
+        assert response.status_code == status.HTTP_204_NO_CONTENT, (
             'Неверный статус код запроса delete `/api/recipes/recipe_id/`'
-        )
-        try:
-            response = client.delete(f'/api/recipes/{recipe.id}/')
-        except Exception as e:
-            assert False, f'''Страница `/api/recipes/{recipe.id}/` работает неправильно. Ошибка: `{e}`'''
-        assert response.status_code == 401, (
-            f'Неверный статус код запроса delete `/api/recipes/recipe_id/` {response.data}'
         )

@@ -50,3 +50,7 @@ docker-compose exec web python manage.py collectstatic --no-input
 ```
 
 ![foodgram_workflow](https://github.com/AndrewYatskevich/foodgram/actions/workflows/foodgram_workflow.yml/badge.svg)
+
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
+Автор: Андрей Яцкевич https://github.com/AndrewYatskevich

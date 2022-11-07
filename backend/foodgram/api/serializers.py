@@ -120,6 +120,18 @@ class RecipeSerializer(serializers.ModelSerializer):
                                                 context={'recipe': obj})
         return serializer.data
 
+    def validate_name(self, value):
+        if len(value) > 200:
+            raise serializers.ValidationError(
+                'Длина названия не больше 200 символов')
+        return value
+
+    def validate_cooking_time(self, value):
+        if value < 1:
+            raise serializers.ValidationError(
+                'Время готовки не меньше 1 мин.')
+        return value
+
     def create(self, validated_data):
         validated_data.pop('ingredients')
         tags = validated_data.pop('tags')

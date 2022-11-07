@@ -9,7 +9,7 @@ services:
       - ./.env
 
   web:
-    image: andrewlyatskevich/foodgram:v1.0
+    build: ../backend/foodgram
     restart: always
     volumes:
       - static_value:/app/django_static/
@@ -20,9 +20,11 @@ services:
       - ./.env
 
   frontend:
-    image: andrewlyatskevich/foodgram_frontend:v1.0
-#    volumes:
-#      - ../frontend/:/app/result_build/
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ../frontend/:/app/result_build/
   nginx:
     image: nginx:1.19.3
     ports:

@@ -4,7 +4,7 @@ from recipes.models import Ingredient
 
 
 def run():
-    with open('scripts/ingredients.json', 'r',
+    with open('data/ingredients.json', 'r',
               encoding='utf-8') as ingredients:
         data = json.load(ingredients)
 

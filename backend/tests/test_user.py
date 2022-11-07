@@ -1,5 +1,16 @@
 import pytest
 
+from django.urls import reverse
+from rest_framework import status
+
+USERS_URLS = {
+    'list': 'api:users-list',
+    'detail': 'api:users-detail',
+    'set_password': 'api:users-set-password',
+    'login': 'api:login',
+    'logout': 'api:logout',
+}
+
 TEST_REGISTRATION_DATA = {
   "email": "vpupkin@yandex.ru",
   "username": "Test_User_3",
@@ -22,10 +33,10 @@ class TestUserView:
     @pytest.mark.django_db(transaction=True)
     def test_user_view_list(self, user_client_1, user_2):
         try:
-            response = user_client_1.get('/api/users/')
+            response = user_client_1.get(reverse(USERS_URLS.get('list')))
         except Exception as e:
             assert False, f'''Страница `/api/users/` работает неправильно. Ошибка: `{e}`'''
-        assert response.status_code == 200, (
+        assert response.status_code == status.HTTP_200_OK, (
             'Неверный статус код запроса `/api/users/`'
         )
 
@@ -34,53 +45,53 @@ class TestUserView:
             response = user_client_1.get('/api/users/me/')
         except Exception as e:
             assert False, f'''Страница `/api/users/me/` работает неправильно. Ошибка: `{e}`'''
-        assert response.status_code == 200, (
+        assert response.status_code == status.HTTP_200_OK, (
             'Неверный статус код запроса `/api/users/me/`'
         )
         try:
-            response = user_client_1.get(f'/api/users/{user_2.id}/')
+            response = user_client_1.get(reverse(USERS_URLS.get('detail'), kwargs={'pk': user_2.id}))
         except Exception as e:
             assert False, f'''Страница `/api/users/<user_id>/` работает неправильно. Ошибка: `{e}`'''
-        assert response.status_code == 200, (
+        assert response.status_code == status.HTTP_200_OK, (
             'Неверный статус код запроса `/api/users/<user_id>/`'
         )
 
     @pytest.mark.django_db(transaction=True)
     def test_user_view_registration(self, client, user_client_1, user_2):
         try:
-            response = client.post('/api/users/', data=TEST_REGISTRATION_DATA)
+            response = client.post(reverse(USERS_URLS.get('list')), data=TEST_REGISTRATION_DATA)
         except Exception as e:
             assert False, f'''Страница `/api/users/` работает неправильно. Ошибка: `{e}`'''
-        assert response.status_code == 201, (
+        assert response.status_code == status.HTTP_201_CREATED, (
             f'Неверный статус код запроса `/api/users/`'
         )
 
     @pytest.mark.django_db(transaction=True)
     def test_user_view_set_password(self, client, user_client_1, user_2):
         try:
-            response = user_client_1.post('/api/users/set_password/', data=TEST_PASSWORD_DATA)
+            response = user_client_1.post(reverse(USERS_URLS.get('set_password')), data=TEST_PASSWORD_DATA)
         except Exception as e:
             assert False, f'''Страница `/api/users/set_password/` работает неправильно. Ошибка: `{e}`'''
-        assert response.status_code == 204, (
+        assert response.status_code == status.HTTP_204_NO_CONTENT, (
             f'Неверный статус код запроса `/api/users/set_password/`'
         )
 
     @pytest.mark.django_db(transaction=True)
     def test_user_login(self, client, user_2):
         try:
-            response = client.post('/api/auth/token/login/', data=TEST_LOGIN_DATA)
+            response = client.post(reverse(USERS_URLS.get('login')), data=TEST_LOGIN_DATA)
         except Exception as e:
             assert False, f'''Страница `/api/auth/token/login/` работает неправильно. Ошибка: `{e}`'''
-        assert response.status_code == 200, (
+        assert response.status_code == status.HTTP_200_OK, (
             f'Неверный статус код запроса `/api/auth/token/login/`'
         )
 
     @pytest.mark.django_db(transaction=True)
     def test_user_logout(self, user_client_1):
         try:
-            response = user_client_1.post('/api/auth/token/logout/')
+            response = user_client_1.post(reverse(USERS_URLS.get('logout')))
         except Exception as e:
             assert False, f'''Страница `/api/auth/token/logout/` работает неправильно. Ошибка: `{e}`'''
-        assert response.status_code == 204, (
+        assert response.status_code == status.HTTP_204_NO_CONTENT, (
             f'Неверный статус код запроса `/api/auth/token/logout/`'
         )

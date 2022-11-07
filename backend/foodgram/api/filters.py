@@ -1,13 +1,13 @@
-from django_filters import rest_framework as filters
+from django_filters.rest_framework import FilterSet, CharFilter
 from recipes.models import Ingredient, Recipe
 
 
-class RecipeFilter(filters.FilterSet):
-    author = filters.CharFilter(
+class RecipeFilter(FilterSet):
+    author = CharFilter(
         field_name='author__id',
         lookup_expr='icontains',
     )
-    tags = filters.CharFilter(method='filter_tags')
+    tags = CharFilter(method='filter_tags')
 
     class Meta:
         model = Recipe
@@ -18,8 +18,8 @@ class RecipeFilter(filters.FilterSet):
         return queryset.filter(tags__slug__in=tags_params).distinct()
 
 
-class IngredientFilter(filters.FilterSet):
-    name = filters.CharFilter(
+class IngredientFilter(FilterSet):
+    name = CharFilter(
         field_name='name',
         lookup_expr='istartswith',
     )
