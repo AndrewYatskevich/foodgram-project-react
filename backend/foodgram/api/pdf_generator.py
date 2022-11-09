@@ -1,13 +1,15 @@
 import io
 
 from django.conf import settings
-from recipes.models import RecipeIngredient
+
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.units import inch
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas
 from reportlab.rl_config import TTFSearchPath
+
+from recipes.models import RecipeIngredient
 
 TTFSearchPath.append(
     str(settings.BASE_DIR) + '/data/reportlabs/fonts')
@@ -32,9 +34,9 @@ class PdfGenerator:
                 shopping_cart[ingredient_name] = [amount, measurement_unit]
 
         buf = io.BytesIO()
-        c = canvas.Canvas(buf, pagesize=letter, bottomup=0)
+        pdf_canvas = canvas.Canvas(buf, pagesize=letter, bottomup=0)
 
-        textob = c.beginText(40, 680)
+        textob = pdf_canvas.beginText(40, 680)
         textob.setTextOrigin(inch, inch)
         pdfmetrics.registerFont(TTFont('FreeSans', 'FreeSans.ttf'))
         textob.setFont('FreeSans', 14)
@@ -50,9 +52,9 @@ class PdfGenerator:
         for line in lines:
             textob.textLines(line)
 
-        c.drawText(textob)
-        c.showPage()
-        c.save()
+        pdf_canvas.drawText(textob)
+        pdf_canvas.showPage()
+        pdf_canvas.save()
         buf.seek(0)
 
         return buf

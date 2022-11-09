@@ -9,7 +9,7 @@ User = get_user_model()
 class Tag(models.Model):
     name = models.CharField('Название', unique=True, max_length=50)
     color = ColorField('Цвет', unique=True, default='#FF0000')
-    slug = models.SlugField('Слаг', unique=True, max_length=50)
+    slug = models.SlugField('Слаг', unique=True)
 
     class Meta:
         verbose_name = 'Тег'
@@ -52,14 +52,14 @@ class Recipe(models.Model):
     ingredients = models.ManyToManyField(
         Ingredient,
         through='RecipeIngredient',
+        blank=False
     )
     tags = models.ManyToManyField(
         Tag,
         related_name='recipes',
         verbose_name=u'Тег',
     )
-    cooking_time = models.IntegerField('Время приготовления',
-                                       validators=(MinValueValidator(1),))
+    cooking_time = models.IntegerField('Время приготовления')
     pub_date = models.DateTimeField('Дата публикации', auto_now_add=True)
 
     class Meta:
@@ -75,3 +75,7 @@ class RecipeIngredient(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
     amount = models.IntegerField('Количество')
+
+    class Meta:
+        verbose_name = 'Ингредиент рецепта'
+        verbose_name_plural = 'Ингредиенты рецептов'

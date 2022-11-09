@@ -1,16 +1,17 @@
 from django.http import FileResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet as DjoserUserViewSet
-from recipes.models import Ingredient, Recipe, Tag, User
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 
+from recipes.models import Ingredient, Recipe, Tag, User
 from .filters import IngredientFilter, RecipeFilter
 from .pagination import CustomPagination
 from .pdf_generator import PdfGenerator
 from .serializers import (IngredientSerializer, RecipeSerializer,
+                          RecipeSubscriptionsSerializer,
                           TagSerializer, UserDetailsSerializer,
                           UserSubscriptionsSerializer)
 
@@ -113,8 +114,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 recipe = Recipe.objects.get(pk=pk)
             except Recipe.DoesNotExist:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
+            serializer = RecipeSubscriptionsSerializer(recipe)
             request.user.favorite.add(recipe)
-            return Response(status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         try:
             recipe = Recipe.objects.get(pk=pk)
         except Recipe.DoesNotExist:
@@ -130,8 +132,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 recipe = Recipe.objects.get(pk=pk)
             except Recipe.DoesNotExist:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
+            serializer = RecipeSubscriptionsSerializer(recipe)
             request.user.shopping_cart.add(recipe)
-            return Response(status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         try:
             recipe = Recipe.objects.get(pk=pk)
         except Recipe.DoesNotExist:
